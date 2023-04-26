@@ -1,4 +1,16 @@
 from tkinter import *
+import random
+
+def generate_password():
+    password = ''
+    uppercase = [chr(iteration) for iteration in range(65, 91)]
+    lowercase = [chr(iteration) for iteration in range(97, 123)]
+    signs = [chr(iteration) for iteration in range(33, 39)]
+    tab = uppercase + lowercase + signs
+    for _ in range(0, 10):
+        password += random.choice(tab)
+    input_password.insert(0, password)
+    print(password)
 
 def save():
     website = input_website.get()
@@ -38,17 +50,10 @@ label_password.grid(column=0, row=3)
 input_password = Entry(width=32)
 input_password.grid(column=1, row=3)
 
-button_generate_password = Button(text="Generate")
+button_generate_password = Button(text="Generate", command=generate_password)
 button_generate_password.grid(column=2, row=3)
 
 button_add = Button(text="Add", width=36, command=save)
 button_add.grid(column=1, row=4, columnspan=2)
-
-
-
-
-
-
-
 
 window.mainloop()
