@@ -1,0 +1,6 @@
+with open("data.json", "r") as file:
+    data = json.load(file)
+    data.update(new_data)
+    print(data)
+with open("data.json", "w") as file:
+    json.dump(data, file, indent=4)
