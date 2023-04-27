@@ -1,5 +1,6 @@
 from tkinter import *
 import random
+import json
 
 def generate_password():
     password = ''
@@ -16,13 +17,39 @@ def save():
     website = input_website.get()
     username = input_username.get()
     password = input_password.get()
-    wiersz = website + " | " + username + " | " + password + "\n"
-    with open("passwords.txt", "a") as file:
-        file.write(wiersz)
+    new_data = {
+        website: {
+            "username": username,
+            "password": password
+        }
+    }
+    with open("data.json", "r") as file:
+        data = json.load(file)
+        print(f"Load: {data}")
+        data.update(new_data)
+        print(f"Update: {data}")
+    with open("data.json", "w") as file:
+        json.dump(data, file, indent=4)
+        print(f"Dump: {data}")
+
     input_website.delete(0, 'end')
     input_username.delete(0, 'end')
     input_username.insert(0, "angela@gmail.com")
     input_password.delete(0, 'end')
+
+def find():
+    input_password.delete(0, 'end')
+    input_username.delete(0, 'end')
+    website = input_website.get()
+    with open("data.json", "r") as file:
+        data = json.load(file)
+        if website in data:
+            password = data[website]["password"]
+            username = data[website]["username"]
+            input_password.insert(0, password)
+            input_username.insert(0, username)
+        else:
+            print(f"Website: {website} doesn't exist!")
 
 window = Tk()
 window.title("Password generator")
@@ -35,8 +62,8 @@ canvas.grid(row=0, column=1)
 
 label_website = Label(text="Website:")
 label_website.grid(column=0, row=1)
-input_website = Entry(width=42)
-input_website.grid(column=1, row=1, columnspan=2)
+input_website = Entry(width=32)
+input_website.grid(column=1, row=1)
 input_website.focus()
 
 label_username = Label(text="Email/Username:")
@@ -52,6 +79,9 @@ input_password.grid(column=1, row=3)
 
 button_generate_password = Button(text="Generate", command=generate_password)
 button_generate_password.grid(column=2, row=3)
+
+button_search = Button(text="Search", command=find)
+button_search.grid(column=2, row=1)
 
 button_add = Button(text="Add", width=36, command=save)
 button_add.grid(column=1, row=4, columnspan=2)
